@@ -15,6 +15,10 @@ int main() {
 	threshold(srcMat, binaryMat, 0, 255, THRESH_OTSU);
 	cv::imshow("二值化", binaryMat);//显示二值化图像
 	//二值化
+	//创建结构元素
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
+	//闭运算
+	morphologyEx(binaryMat, binaryMat, MORPH_CLOSE, kernel);
 	cv::Mat labelMat;
 	cv::Mat statsMat;
 	cv::Mat centreMat;
@@ -43,8 +47,9 @@ int main() {
 		bndbox.y = statsMat.at<int>(i, 1);
 		bndbox.width = statsMat.at<int>(i, 2);
 		bndbox.height = statsMat.at<int>(i, 3);
-		rectangle(labelMat, bndbox, CV_RGB(255, 255, 255), 2, 8, 0);
+		//绘制
+		rectangle(binaryMat, bndbox, CV_RGB(255, 255, 255), 1, 8, 0);
 	}
-	imshow("results", labelMat);
+	imshow("results", binaryMat);
 	waitKey(0);
 }
